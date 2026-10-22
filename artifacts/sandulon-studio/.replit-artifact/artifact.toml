@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Sandulon Studio"
+description = "A portfolio and inquiry website for Sandulon, a Centurion-based creative studio offering UX, motion, industrial design, film, and print services."
+version = "1.0.0"
+id = "artifacts/sandulon-studio"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23058
+
+[services.development]
+run = "pnpm --filter @workspace/sandulon-studio run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/sandulon-studio", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/sandulon-studio/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23058"
+BASE_PATH = "/"
