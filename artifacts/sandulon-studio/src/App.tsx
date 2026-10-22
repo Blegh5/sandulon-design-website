@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Link, Route, Switch, useLocation } from 'wouter';
-import { ArrowDown, ArrowRight, ArrowUpRight, Menu, X } from 'lucide-react';
+import { ArrowDown, ArrowRight, ArrowUpRight, Minus, Plus, Menu, X } from 'lucide-react';
 import NotFound from '@/pages/not-found';
 
 const wa = (text: string) => `https://wa.me/27761771213?text=${encodeURIComponent(text)}`;
@@ -214,7 +214,94 @@ const hardGoodsProducts = [
   {id:'business-cards',name:'Business Cards',spec:'100 units · 85 × 55 mm',price:'R255'},
   {id:'vinyl-stickers',name:'Vinyl Stickers',spec:'1 × 3 m sheet',price:'R170'},
 ];
+
+type CatalogueProduct = {
+  id: string;
+  name: string;
+  price: string | null;
+  spec?: string;
+};
+
+const allCatalogueProducts: CatalogueProduct[] = [...apparelProducts, ...hardGoodsProducts];
+
+const shippingOptions = {
+  courier: {
+    label: 'Courier Guy standard overnight — R45',
+    message: 'Courier Guy standard overnight delivery (R45).',
+  },
+  pudo: {
+    label: 'PUDO locker-to-locker — R60',
+    message: 'PUDO locker-to-locker delivery (listed at R60; please confirm the noted R25-per-order reduction and final total).',
+  },
+  freeDelivery: {
+    label: 'Check free delivery eligibility — orders over R1,200',
+    message: 'Please check whether this order qualifies for free delivery under the Brands UP policy (orders over R1,200).',
+  },
+} as const;
+
+type ShippingOption = keyof typeof shippingOptions;
+
+function RequestQuantity({productName, quantity, onChange}: {
+  productName: string;
+  quantity: number;
+  onChange: (quantity: number) => void;
+}) {
+  if (quantity === 0) {
+    return <button
+      type="button"
+      className="product-action request-add"
+      onClick={() => onChange(1)}
+      aria-label={`Add ${productName} to request`}
+      data-testid={`button-add-${productName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+    >
+      Add to request <Plus size={14}/>
+    </button>;
+  }
+
+  return <div className="request-quantity" aria-label={`Quantity for ${productName}`}>
+    <button type="button" onClick={() => onChange(quantity - 1)} aria-label={`Remove one ${productName}`}><Minus size={13}/></button>
+    <output aria-live="polite">{quantity}</output>
+    <button type="button" onClick={() => onChange(quantity + 1)} aria-label={`Add one ${productName}`}><Plus size={13}/></button>
+  </div>;
+}
+
+function buildRequestMessage(products: CatalogueProduct[], quantities: Record<string, number>, shipping: ShippingOption) {
+  const lines = products
+    .filter(product => (quantities[product.id] ?? 0) > 0)
+    .map(product => {
+      const quantity = quantities[product.id];
+      return product.price
+        ? `• ${quantity} × ${product.name} (${product.price} each)`
+        : `• ${quantity} × ${product.name} — quote required (please confirm size, colour and price)`;
+    });
+  const includesQuoteOnlyApparel = products.some(product => !product.price && (quantities[product.id] ?? 0) > 0);
+  return [
+    'Hello Sandulon, I would like to request a quote for:',
+    ...lines,
+    '',
+    `Delivery preference: ${shippingOptions[shipping].message}`,
+    ...(includesQuoteOnlyApparel ? ['', 'Please confirm available apparel sizes and colours, along with the quote for those items.'] : []),
+    '',
+    'Please confirm the final total and any applicable order charges.',
+  ].join('\n');
+}
+
 function Print() {
+  const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const [shipping, setShipping] = useState<ShippingOption>('courier');
+  const selectedProducts = allCatalogueProducts.filter(product => (quantities[product.id] ?? 0) > 0);
+  const selectedUnitCount = selectedProducts.reduce((total, product) => total + quantities[product.id], 0);
+  const requestMessage = buildRequestMessage(selectedProducts, quantities, shipping);
+
+  const updateQuantity = (productId: string, quantity: number) => {
+    setQuantities(current => {
+      const next = {...current};
+      if (quantity <= 0) delete next[productId];
+      else next[productId] = quantity;
+      return next;
+    });
+  };
+
   useEffect(()=>{document.title='Print & Merchandise — Sandulon | Custom Print Centurion'; const d=document.querySelector('meta[name="description"]')||document.createElement('meta');d.setAttribute('name','description');d.setAttribute('content','Browse Sandulon’s 2026 apparel, desk gear and print prices. Request a quote or order directly on WhatsApp.');document.head.appendChild(d);},[]);
  return <PageShell>
    <section className="print-hero">
@@ -236,7 +323,7 @@ function Print() {
     <div className="wrap">
      <div className="catalogue-heading">
       <div><div className="eyebrow" style={{marginBottom:15}}>2026 / Published prices</div><h2 className="display">The catalogue.</h2></div>
-      <p>Choose an item to start an order on WhatsApp. Products marked “Quote on request” can start a quote conversation directly.</p>
+       <p>Add the items you want, set quantities and choose a delivery preference. We’ll send one complete request on WhatsApp; apparel without a listed price needs a quote.</p>
      </div>
      <section className="catalogue-group" aria-labelledby="apparel-heading" data-testid="section-apparel">
       <div className="catalogue-group-head"><div><span className="eyebrow">01 / Wear</span><h3 className="display" id="apparel-heading">Apparel</h3></div><span className="catalogue-note">VAT & delivery inclusive</span></div>
@@ -245,7 +332,7 @@ function Print() {
         <span className="product-index mono">{String(index+1).padStart(2,'0')}</span>
         <h4 className="display product-name">{product.name}</h4>
         <span className={`product-price ${product.price?'':'quote-price'}`} data-testid={`text-price-${product.id}`}>{product.price||'Quote on request'}</span>
-        <a className="product-action" href={wa(`Hello Sandulon, I would like to ${product.price?'order':'request a quote for'} ${product.name}.`)} target="_blank" rel="noreferrer" aria-label={`${product.price?'Order':'Request a quote for'} ${product.name} on WhatsApp`} data-testid={`link-order-${product.id}`}>{product.price?'Order on WhatsApp':'Request a quote'} <ArrowUpRight size={14}/></a>
+         <RequestQuantity productName={product.name} quantity={quantities[product.id] ?? 0} onChange={quantity => updateQuantity(product.id, quantity)}/>
        </article>)}
       </div>
      </section>
@@ -256,10 +343,42 @@ function Print() {
         <div className="hard-good-top"><span className="product-index mono">{String(index+6).padStart(2,'0')}</span><span className="display hard-good-price" data-testid={`text-price-${product.id}`}>{product.price}</span></div>
         <h4 className="display">{product.name}</h4>
         {product.spec&&<p>{product.spec}</p>}
-        <a className="product-action" href={wa(`Hello Sandulon, I would like to order ${product.name}.`)} target="_blank" rel="noreferrer" aria-label={`Order ${product.name} on WhatsApp`} data-testid={`link-order-${product.id}`}>Order on WhatsApp <ArrowUpRight size={14}/></a>
+         <RequestQuantity productName={product.name} quantity={quantities[product.id] ?? 0} onChange={quantity => updateQuantity(product.id, quantity)}/>
        </article>)}
       </div>
       <p className="catalogue-footnote">Quotes confirm final totals, including any applicable delivery and other order charges.</p>
+     </section>
+     <section className="request-panel" aria-labelledby="request-heading" data-testid="section-order-request">
+      <div className="request-panel-heading">
+       <div><div className="eyebrow" style={{marginBottom:12}}>One message · All your items</div><h3 className="display" id="request-heading">Your request.</h3></div>
+       <span className="request-count" aria-live="polite">{selectedProducts.length} {selectedProducts.length === 1 ? 'item' : 'items'} · {selectedUnitCount} {selectedUnitCount === 1 ? 'unit' : 'units'}</span>
+      </div>
+      {selectedProducts.length === 0
+       ? <p className="request-empty">Add products from the catalogue above to build your request. You can change quantities before sending.</p>
+       : <ul className="request-items">
+         {selectedProducts.map(product=><li className="request-item" key={product.id} data-testid={`request-item-${product.id}`}>
+          <div className="request-item-copy">
+           <span className="display">{product.name}</span>
+           {product.price
+             ? <span className="request-item-price">{product.price} each</span>
+             : <span className="request-item-quote">Quote required · size, colour and price to confirm</span>}
+          </div>
+          <RequestQuantity productName={product.name} quantity={quantities[product.id] ?? 0} onChange={quantity => updateQuantity(product.id, quantity)}/>
+         </li>)}
+        </ul>}
+      <div className="request-panel-footer">
+       <label className="shipping-field" htmlFor="shipping-preference">
+        <span className="eyebrow">Delivery preference</span>
+        <select id="shipping-preference" value={shipping} onChange={event => setShipping(event.target.value as ShippingOption)} data-testid="select-shipping-preference">
+         {Object.entries(shippingOptions).map(([value, option])=><option key={value} value={value}>{option.label}</option>)}
+        </select>
+        {shipping === 'pudo' && <span className="shipping-hint">The price list notes a R25-per-order reduction for PUDO; the final delivery amount will be confirmed.</span>}
+        {shipping === 'freeDelivery' && <span className="shipping-hint">Free delivery is listed for orders over R1,200; eligibility will be confirmed with your quote.</span>}
+       </label>
+       {selectedProducts.length > 0
+         ? <a className="solid-link request-send" href={wa(requestMessage)} target="_blank" rel="noreferrer" data-testid="link-send-order-request">Send complete request on WhatsApp <ArrowUpRight size={15}/></a>
+         : <button className="solid-link request-send" type="button" disabled>Select products to continue</button>}
+      </div>
      </section>
     </div>
    </section>
