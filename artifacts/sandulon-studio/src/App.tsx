@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Link, Route, Switch, useLocation } from 'wouter';
-import { ArrowDown, ArrowRight, ArrowUpRight, Minus, Plus, Menu, X } from 'lucide-react';
+import { ArrowDown, ArrowRight, ArrowUpRight, Minus, Plus, Menu, Printer, X } from 'lucide-react';
 import NotFound from '@/pages/not-found';
 
 const wa = (text: string) => `https://wa.me/27761771213?text=${encodeURIComponent(text)}`;
@@ -224,6 +224,51 @@ type CatalogueProduct = {
 
 const allCatalogueProducts: CatalogueProduct[] = [...apparelProducts, ...hardGoodsProducts];
 
+const customerOrderTerms = [
+  {
+    id: 'design-fee',
+    label: '01 / Artwork',
+    title: 'Standard design fee · R50',
+    description: 'Covers asset intake, print-ready vector preparation and one revision cycle.',
+  },
+  {
+    id: 'vector-recreation',
+    label: '02 / Complex artwork',
+    title: 'Manual re-vectoring · R250 excl. VAT',
+    description: 'Complex manual re-vectoring or logo recreation beyond standard layout adjustment costs R250 excl. VAT.',
+  },
+  {
+    id: 'payment-terms',
+    label: '03 / Payment',
+    title: '100% upfront',
+    description: 'Full payment is required before production begins.',
+  },
+  {
+    id: 'production-timing',
+    label: '04 / Timing',
+    title: '10–15 business days in production',
+    description: 'Standard production takes 10–15 business days after final proof approval, plus 24–48 hours transit.',
+  },
+  {
+    id: 'courier-delivery',
+    label: '05 / Standard delivery',
+    title: 'R45 standard overnight',
+    description: 'Standard overnight door-to-door delivery is R45.',
+  },
+  {
+    id: 'free-delivery',
+    label: '06 / Larger orders',
+    title: 'Free delivery over R1,200',
+    description: 'Free delivery applies to orders over R1,200; eligibility will be confirmed with your quote.',
+  },
+  {
+    id: 'pudo-delivery',
+    label: '07 / Locker delivery',
+    title: 'Locker-to-locker · R60 flat',
+    description: 'Available on request. A R25-per-order reduction is noted for this option; the final delivery amount will be confirmed with your quote.',
+  },
+];
+
 const shippingOptions = {
   courier: {
     label: 'Courier Guy standard overnight — R45',
@@ -286,6 +331,58 @@ function buildRequestMessage(products: CatalogueProduct[], quantities: Record<st
   ].join('\n');
 }
 
+function PublicPriceSheet() {
+  return <section className="public-price-sheet" aria-labelledby="public-price-sheet-heading" data-testid="section-public-price-sheet">
+    <header className="price-sheet-header">
+      <div className="price-sheet-brand">SANDULON <span>·</span> PRINT &amp; MERCHANDISE</div>
+      <p className="price-sheet-year">CUSTOMER PRICE LIST · 2026</p>
+      <h1 id="public-price-sheet-heading" data-testid="text-public-price-sheet-title">Print &amp; merchandise</h1>
+      <p className="price-sheet-intro">Published product prices and order terms. All prices are in South African rand (R).</p>
+    </header>
+
+    <section className="price-sheet-section" aria-labelledby="price-sheet-apparel-heading">
+      <div className="price-sheet-section-heading">
+        <h2 id="price-sheet-apparel-heading">Apparel</h2>
+        <span>VAT &amp; delivery inclusive</span>
+      </div>
+      <table className="price-sheet-table">
+        <thead><tr><th scope="col">Product</th><th scope="col">Published price</th></tr></thead>
+        <tbody>{apparelProducts.map(product => <tr key={product.id} data-testid={`price-sheet-item-${product.id}`}>
+          <td>{product.name}</td>
+          <td>{product.price || 'Quote on request'}</td>
+        </tr>)}</tbody>
+      </table>
+    </section>
+
+    <section className="price-sheet-section" aria-labelledby="price-sheet-hard-goods-heading">
+      <div className="price-sheet-section-heading">
+        <h2 id="price-sheet-hard-goods-heading">Desk gear &amp; hard goods</h2>
+        <span>Published item prices</span>
+      </div>
+      <table className="price-sheet-table">
+        <thead><tr><th scope="col">Product</th><th scope="col">Published price</th></tr></thead>
+        <tbody>{hardGoodsProducts.map(product => <tr key={product.id} data-testid={`price-sheet-item-${product.id}`}>
+          <td>{product.name}{product.spec ? <span className="price-sheet-spec"> · {product.spec}</span> : null}</td>
+          <td>{product.price}</td>
+        </tr>)}</tbody>
+      </table>
+      <p className="price-sheet-note">Quotes confirm final totals, including any applicable delivery and other order charges.</p>
+    </section>
+
+    <section className="price-sheet-section" aria-labelledby="price-sheet-terms-heading">
+      <div className="price-sheet-section-heading"><h2 id="price-sheet-terms-heading">Order terms</h2></div>
+      <div className="price-sheet-terms">
+        {customerOrderTerms.map(term => <article className="price-sheet-term" key={term.id} data-testid={`price-sheet-term-${term.id}`}>
+          <h3>{term.title}</h3>
+          <p>{term.description}</p>
+        </article>)}
+      </div>
+    </section>
+
+    <p className="price-sheet-footer">2026 customer price list · Contact Sandulon for a quote or to confirm your order total.</p>
+  </section>;
+}
+
 function Print() {
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [shipping, setShipping] = useState<ShippingOption>('courier');
@@ -304,6 +401,7 @@ function Print() {
 
   useEffect(()=>{document.title='Print & Merchandise — Sandulon | Custom Print Centurion'; const d=document.querySelector('meta[name="description"]')||document.createElement('meta');d.setAttribute('name','description');d.setAttribute('content','Browse Sandulon’s 2026 apparel, desk gear and print prices. Request a quote or order directly on WhatsApp.');document.head.appendChild(d);},[]);
  return <PageShell>
+   <div className="print-screen-content">
    <section className="print-hero">
     <div className="wrap print-hero-layout">
      <div className="print-hero-copy">
@@ -311,7 +409,12 @@ function Print() {
       <div className="eyebrow" style={{margin:'12px 0 18px'}}>02 / Print & merchandise · 2026 price list</div>
       <h1 className="display print-title">Good ideas,<br/><i style={{color:'#C7994D'}}>made physical.</i></h1>
       <p className="print-intro">Apparel, desk gear and everyday print, produced with care. Browse the published prices below, then message us on WhatsApp to place an order or request a quote.</p>
-      <a href="#catalogue" className="solid-link" data-testid="link-print-browse">Browse the catalogue <ArrowDown size={14}/></a>
+       <div className="print-hero-actions">
+        <a href="#catalogue" className="solid-link" data-testid="link-print-browse">Browse the catalogue <ArrowDown size={14}/></a>
+        <button type="button" className="outline-link print-list-trigger" onClick={() => window.print()} data-testid="button-print-price-list">
+         Print / save 2026 list <Printer size={15}/>
+        </button>
+       </div>
      </div>
      <div className="print-hero-art">
       <img src={assets+'tote-bag.png'} alt="Printed Sandulon tote bag, an example of custom merchandise" />
@@ -386,13 +489,9 @@ function Print() {
     <div className="wrap order-details-layout">
      <div className="order-details-intro"><div className="eyebrow" style={{marginBottom:16}}>Before we make it</div><h2 className="display" id="order-details-heading">Clear terms.<br/><i style={{color:'#C7994D'}}>Good work.</i></h2><p>From artwork preparation to delivery, here is what to expect with your order.</p></div>
      <div className="terms-list">
-      <article className="term-item" data-testid="text-design-fee"><span className="eyebrow">01 / Artwork</span><div><h3>Standard design fee · R50</h3><p>Covers asset intake, print-ready vector preparation and one revision cycle.</p></div></article>
-      <article className="term-item" data-testid="text-vector-recreation"><span className="eyebrow">02 / Complex artwork</span><div><h3>Manual re-vectoring · R250 excl. VAT</h3><p>Complex manual re-vectoring or logo recreation beyond standard layout adjustment costs R250 excl. VAT.</p></div></article>
-      <article className="term-item" data-testid="text-payment-terms"><span className="eyebrow">03 / Payment</span><div><h3>100% upfront</h3><p>Full payment is required before production begins.</p></div></article>
-      <article className="term-item" data-testid="text-production-timing"><span className="eyebrow">04 / Timing</span><div><h3>10–15 business days in production</h3><p>Standard production takes 10–15 business days after final proof approval, plus 24–48 hours transit.</p></div></article>
-      <article className="term-item" data-testid="text-courier-delivery"><span className="eyebrow">05 / Courier Guy</span><div><h3>R45 standard overnight</h3><p>Standard overnight flyer / local door-to-door delivery is R45.</p></div></article>
-      <article className="term-item" data-testid="text-free-delivery"><span className="eyebrow">06 / Larger orders</span><div><h3>Free delivery over R1,200</h3><p>Free delivery applies to orders over R1,200 via the Brands UP supplier policy.</p></div></article>
-      <article className="term-item" data-testid="text-pudo-delivery"><span className="eyebrow">07 / Locker delivery</span><div><h3>PUDO locker-to-locker · R60 flat</h3><p>Available on request. The price list notes a R25-per-order reduction for this option; we will confirm the final delivery total with your quote.</p></div></article>
+       {customerOrderTerms.map(term => <article className="term-item" key={term.id} data-testid={`text-${term.id}`}>
+        <span className="eyebrow">{term.label}</span><div><h3>{term.title}</h3><p>{term.description}</p></div>
+       </article>)}
      </div>
     </div>
    </section>
@@ -400,6 +499,8 @@ function Print() {
     <div className="wrap print-contact-inner"><div><div className="eyebrow" style={{marginBottom:14}}>Ready when you are</div><h2 className="display">Have a brief?<br/><i style={{color:'#C7994D'}}>Let’s talk.</i></h2><p>Send the item, quantity and any artwork you have. We’ll confirm your order details and final total.</p></div><a href={wa('Hello Sandulon, I would like a quote for a print or merchandise order.')} target="_blank" rel="noreferrer" className="solid-link" data-testid="link-print-whatsapp">Start on WhatsApp <ArrowUpRight size={15}/></a></div>
    </section>
   <Callout/>
+   </div>
+   <PublicPriceSheet/>
  </PageShell>;
 }
 

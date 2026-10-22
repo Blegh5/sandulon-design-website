@@ -1,0 +1,1 @@
+- [Customer price-list privacy](customer-price-list-privacy.md) — build shareable lists from published prices and terms; never expose production costs or supplier details.
