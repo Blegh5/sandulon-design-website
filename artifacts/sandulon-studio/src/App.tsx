@@ -109,8 +109,8 @@ function Home() {
           </div>
           <div style={{padding:'30px 0 34px 32px',borderBottom:'1px solid rgba(234,221,187,.18)',borderLeft:'1px solid rgba(234,221,187,.18)'}}>
             <span className="eyebrow">02 / Print & merchandise</span><h3 className="display" style={{fontSize:38,margin:'20px 0 18px'}}>Made to be held.</h3>
-            <p style={{color:'#a59c8d',fontSize:14,lineHeight:1.8,maxWidth:440}}>Custom print, branded merchandise and large-format work. Designed and produced in-house — single units welcome.</p>
-            <Link href="/print" className="outline-link" data-testid="link-print-services">Explore print & merch <ArrowRight size={14}/></Link>
+            <p style={{color:'#a59c8d',fontSize:14,lineHeight:1.8,maxWidth:440}}>Apparel, desk gear and large-format print. Browse the 2026 price list or request a quote for a custom job.</p>
+            <Link href="/print" className="outline-link" data-testid="link-print-services">Explore 2026 print prices <ArrowRight size={14}/></Link>
           </div>
         </div>
       </div>
@@ -199,55 +199,87 @@ function Design() {
  </PageShell>;
 }
 
-const products = [
- {num:'01',name:'Custom Mousepad',spec:'240 × 300mm · Full-colour sublimation print · Rubber base · Stitched edges',price:'R200',sub:'Shipping included · Single unit',features:['Custom design or your own artwork','Design file prep included','5–10 business day turnaround','Delivered via Aramex']},
- {num:'02',name:'Mousepad + Keychain Bundle',spec:'Custom mousepad + matching branded keychain · Coordinated design across both',price:'R270',sub:'Shipping included · Best value',features:['Unified design language across both items','Great for gifts or branded sets','5–10 business day turnaround','Delivered via Aramex']},
- {num:'03',name:'Large Deskpad',spec:'600 × 300mm · Full-colour print · Premium surface · Extended workspace coverage',price:'R450',sub:'Shipping included · Single unit',features:['Large-format custom design','Ideal for branded workspaces','5–10 business day turnaround','Delivered nationwide']}
+const apparelProducts = [
+  {id:'alpha-t-shirt-men',name:'Alpha T-Shirt Men',price:null},
+  {id:'alpha-t-shirt-women',name:'Alpha T-Shirt Women',price:null},
+  {id:'classic-pique-polo',name:'175g Classic Pique Knit Polo',price:null},
+  {id:'hooded-sweater',name:'Hooded Sweater',price:'R300'},
+  {id:'zipped-hooded-sweater',name:'Zipped Hooded Sweater',price:'R460'},
+];
+const hardGoodsProducts = [
+  {id:'small-mousepad',name:'Small Mousepad',spec:'20 × 24 cm',price:'R145'},
+  {id:'five-panel-cap',name:'5-Panel Cap',spec:'',price:'R168'},
+  {id:'large-deskpad',name:'Large Deskpad',spec:'30 × 70 cm',price:'R190'},
+  {id:'correx-board',name:'Correx Board',spec:'600 × 900 mm',price:'R245'},
+  {id:'business-cards',name:'Business Cards',spec:'100 units · 85 × 55 mm',price:'R255'},
+  {id:'vinyl-stickers',name:'Vinyl Stickers',spec:'1 × 3 m sheet',price:'R170'},
 ];
 function Print() {
- useEffect(()=>{document.title='Print & Merchandise — Sandulon | Custom Print Centurion'; const d=document.querySelector('meta[name="description"]')||document.createElement('meta');d.setAttribute('name','description');d.setAttribute('content','Custom print. No minimums. Sandulon creates and produces branded merchandise, deskpads, mousepads and print in Centurion, South Africa.');document.head.appendChild(d);},[]);
+  useEffect(()=>{document.title='Print & Merchandise — Sandulon | Custom Print Centurion'; const d=document.querySelector('meta[name="description"]')||document.createElement('meta');d.setAttribute('name','description');d.setAttribute('content','Browse Sandulon’s 2026 apparel, desk gear and print prices. Request a quote or order directly on WhatsApp.');document.head.appendChild(d);},[]);
  return <PageShell>
-  <section style={{padding:'180px 0 90px',position:'relative'}}>
-   <div className="wrap mobile-grid" style={{display:'grid',gridTemplateColumns:'1fr .8fr',gap:50,alignItems:'center'}}>
-    <div><Link href="/" className="outline-link" data-testid="link-print-back" style={{border:0,color:'#a59c8d',fontSize:11,marginBottom:52}}>← Back to home</Link>
-    <div className="eyebrow" style={{margin:'12px 0 18px'}}>02 / Print & merchandise</div>
-    <h1 className="display" style={{fontSize:'clamp(64px,10vw,132px)',lineHeight:.88,margin:'0 0 26px'}}>Custom print.<br/><i style={{color:'#C7994D'}}>Done right.</i></h1>
-    <p style={{fontSize:16,lineHeight:1.8,color:'#c4b9a3',maxWidth:540}}>We design and produce every order in-house. Single units or batch runs — both get the same attention. No templates, no minimums, no middlemen. Just well-made print work, delivered.</p></div>
-    <div className="image-frame" style={{height:450}}><img src={assets+'tote-bag.png'} alt="Custom Sandulon printed tote bag merchandise" /></div>
-   </div>
-  </section>
-  <section style={{background:'#1c1715',padding:'75px 0 85px'}}>
-   <div className="wrap">
-    <div className="eyebrow" style={{marginBottom:32}}>How it works / Simple by design</div>
-    <div className="mobile-grid" style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:28}}>
-     {[['01','Send a brief','Tell us what you need — product, quantity, size, and any artwork you have. WhatsApp or the inquiry form both work. We’ll come back within 24 hours.'],['02','We design it','No artwork? No problem. We create a custom design from your brief. You review and approve before anything goes to print.'],['03','Payment upfront','All print orders are paid upfront before production begins. We’ll send a quote and payment details once the design is approved.'],['04','Delivered to you','We ship via Aramex nationwide, or deliver locally across Centurion. Standard turnaround is 5–10 business days from payment.']].map(([num,title,copy])=><div key={num} style={{borderTop:'1px solid rgba(234,221,187,.28)',paddingTop:18}}><span className="eyebrow">{num}</span><h3 className="display" style={{fontSize:25,margin:'16px 0 10px'}}>{title}</h3><p style={{fontSize:13,color:'#a59c8d',lineHeight:1.75}}>{copy}</p></div>)}
+   <section className="print-hero">
+    <div className="wrap print-hero-layout">
+     <div className="print-hero-copy">
+      <Link href="/" className="outline-link" data-testid="link-print-back" style={{border:0,color:'#a59c8d',fontSize:11,marginBottom:42}}>Back to home <ArrowRight size={13}/></Link>
+      <div className="eyebrow" style={{margin:'12px 0 18px'}}>02 / Print & merchandise · 2026 price list</div>
+      <h1 className="display print-title">Good ideas,<br/><i style={{color:'#C7994D'}}>made physical.</i></h1>
+      <p className="print-intro">Apparel, desk gear and everyday print, produced with care. Browse the published prices below, then message us on WhatsApp to place an order or request a quote.</p>
+      <a href="#catalogue" className="solid-link" data-testid="link-print-browse">Browse the catalogue <ArrowDown size={14}/></a>
+     </div>
+     <div className="print-hero-art">
+      <img src={assets+'tote-bag.png'} alt="Printed Sandulon tote bag, an example of custom merchandise" />
+      <span className="mono">Sandulon / Print & objects</span>
+     </div>
     </div>
-   </div>
-  </section>
-  <section style={{padding:'110px 0 90px'}}>
-   <div className="wrap">
-    <div className="eyebrow" style={{marginBottom:17}}>Priced products</div><h2 className="display" style={{fontSize:'clamp(44px,7vw,80px)',lineHeight:1,margin:'0 0 42px'}}>No minimum order.</h2>
-    <div style={{borderTop:'1px solid rgba(234,221,187,.2)'}}>
-     {products.map(p=><article key={p.num} style={{display:'grid',gridTemplateColumns:'58px 1fr 200px',gap:28,padding:'32px 0',borderBottom:'1px solid rgba(234,221,187,.2)'}}>
-      <span className="eyebrow" style={{paddingTop:5}}>{p.num}</span>
-      <div><h3 className="display" style={{fontSize:30,margin:'0 0 8px'}}>{p.name}</h3><p style={{fontSize:12,color:'#a59c8d',margin:'0 0 18px'}}>{p.spec}</p><div className="mobile-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px 20px'}}>{p.features.map((f,i)=><span key={f} style={{fontSize:11,color:'#c6bda9'}}><span style={{color:'#C7994D',marginRight:9}}>—</span>{f}</span>)}</div></div>
-      <div style={{textAlign:'right'}}><span className="display" style={{fontSize:34,color:'#C7994D'}}>{p.price}</span><div style={{fontSize:10,color:'#8d867a',margin:'4px 0 18px'}}>{p.sub}</div><a className="outline-link" href={wa(`Hello Sandulon, I would like to order the ${p.name}.`)} target="_blank" rel="noreferrer" data-testid={`link-order-${p.num}`}>Order now <ArrowUpRight size={13}/></a></div>
-     </article>)}
+   </section>
+   <section id="catalogue" className="print-catalogue">
+    <div className="wrap">
+     <div className="catalogue-heading">
+      <div><div className="eyebrow" style={{marginBottom:15}}>2026 / Published prices</div><h2 className="display">The catalogue.</h2></div>
+      <p>Choose an item to start an order on WhatsApp. Products marked “Quote on request” can start a quote conversation directly.</p>
+     </div>
+     <section className="catalogue-group" aria-labelledby="apparel-heading" data-testid="section-apparel">
+      <div className="catalogue-group-head"><div><span className="eyebrow">01 / Wear</span><h3 className="display" id="apparel-heading">Apparel</h3></div><span className="catalogue-note">VAT & delivery inclusive</span></div>
+      <div className="product-list">
+       {apparelProducts.map((product,index)=><article className="product-row" key={product.id} data-testid={`card-product-${product.id}`}>
+        <span className="product-index mono">{String(index+1).padStart(2,'0')}</span>
+        <h4 className="display product-name">{product.name}</h4>
+        <span className={`product-price ${product.price?'':'quote-price'}`} data-testid={`text-price-${product.id}`}>{product.price||'Quote on request'}</span>
+        <a className="product-action" href={wa(`Hello Sandulon, I would like to ${product.price?'order':'request a quote for'} ${product.name}.`)} target="_blank" rel="noreferrer" aria-label={`${product.price?'Order':'Request a quote for'} ${product.name} on WhatsApp`} data-testid={`link-order-${product.id}`}>{product.price?'Order on WhatsApp':'Request a quote'} <ArrowUpRight size={14}/></a>
+       </article>)}
+      </div>
+     </section>
+     <section className="catalogue-group hard-goods" aria-labelledby="hard-goods-heading" data-testid="section-hard-goods">
+      <div className="catalogue-group-head"><div><span className="eyebrow">02 / Work & play</span><h3 className="display" id="hard-goods-heading">Desk gear &amp; hard goods</h3></div><span className="catalogue-note">Published item prices</span></div>
+      <div className="hard-goods-grid">
+       {hardGoodsProducts.map((product,index)=><article className="hard-good-card" key={product.id} data-testid={`card-product-${product.id}`}>
+        <div className="hard-good-top"><span className="product-index mono">{String(index+6).padStart(2,'0')}</span><span className="display hard-good-price" data-testid={`text-price-${product.id}`}>{product.price}</span></div>
+        <h4 className="display">{product.name}</h4>
+        {product.spec&&<p>{product.spec}</p>}
+        <a className="product-action" href={wa(`Hello Sandulon, I would like to order ${product.name}.`)} target="_blank" rel="noreferrer" aria-label={`Order ${product.name} on WhatsApp`} data-testid={`link-order-${product.id}`}>Order on WhatsApp <ArrowUpRight size={14}/></a>
+       </article>)}
+      </div>
+      <p className="catalogue-footnote">Quotes confirm final totals, including any applicable delivery and other order charges.</p>
+     </section>
     </div>
-   </div>
-  </section>
-  <section style={{padding:'58px 0 86px',background:'#EADDBB',color:'#130F0E'}}>
-   <div className="wrap mobile-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:70,alignItems:'center'}}>
-    <div className="image-frame" style={{height:380}}><img src={assets+'deskpad-mockup.png'} alt="Solid Creations Group custom full-colour deskpad" /></div>
-    <div><div className="eyebrow" style={{color:'#A74926',marginBottom:17}}>Custom jobs / Client work · 2026</div><h2 className="display" style={{fontSize:48,margin:'0 0 14px'}}>Solid Creations Group</h2><p style={{fontSize:14,lineHeight:1.7,color:'#51483e',maxWidth:440}}>Custom deskpad · large format · full-colour · delivered. Correx boards, flyers, and business cards — every piece made to carry the brand further.</p><a href={wa('Hello Sandulon, I would like a custom print quote for my project.')} target="_blank" rel="noreferrer" className="outline-link" data-testid="link-print-custom-quote" style={{color:'#130F0E',marginTop:10}}>Request a custom quote <ArrowRight size={14}/></a></div>
-   </div>
-  </section>
-  <section style={{padding:'100px 0 30px'}}><div className="wrap">
-   <div className="eyebrow" style={{marginBottom:16}}>Priced by the job</div><h2 className="display" style={{fontSize:'clamp(42px,6vw,70px)',margin:'0 0 38px'}}>The details matter.</h2>
-   <div className="mobile-grid" style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:30}}>
-    {[['Correx Boards','Outdoor signage, estate agent boards, A-frames, and property listings. Printed on corrugated plastic, built for outdoor use.','Min. 5 units · Quote on request'],['Flyers','A5 full-colour flyers for events, listings, menus, and promotions. Double or single-sided, gloss or matte. We design and print.','Min. 100 units · Quote on request'],['Business Cards','Single or double-sided, standard or custom size. Ideal for estate agents, freelancers, and small businesses. Design included.','Min. 50 units · Quote on request']].map(([name,body,foot])=><article key={name} style={{borderTop:'1px solid rgba(234,221,187,.24)',paddingTop:18}}><h3 className="display" style={{fontSize:29,margin:'0 0 12px'}}>{name}</h3><p style={{fontSize:13,color:'#a59c8d',lineHeight:1.8,minHeight:86}}>{body}</p><span className="eyebrow" style={{fontSize:9}}>{foot}</span></article>)}
-   </div>
-  </div></section>
+   </section>
+   <section className="order-details" aria-labelledby="order-details-heading" data-testid="section-order-details">
+    <div className="wrap order-details-layout">
+     <div className="order-details-intro"><div className="eyebrow" style={{marginBottom:16}}>Before we make it</div><h2 className="display" id="order-details-heading">Clear terms.<br/><i style={{color:'#C7994D'}}>Good work.</i></h2><p>From artwork preparation to delivery, here is what to expect with your order.</p></div>
+     <div className="terms-list">
+      <article className="term-item" data-testid="text-design-fee"><span className="eyebrow">01 / Artwork</span><div><h3>Standard design fee · R50</h3><p>Covers asset intake, print-ready vector preparation and one revision cycle.</p></div></article>
+      <article className="term-item" data-testid="text-vector-recreation"><span className="eyebrow">02 / Complex artwork</span><div><h3>Manual re-vectoring · R250 excl. VAT</h3><p>Complex manual re-vectoring or logo recreation beyond standard layout adjustment costs R250 excl. VAT.</p></div></article>
+      <article className="term-item" data-testid="text-payment-terms"><span className="eyebrow">03 / Payment</span><div><h3>100% upfront</h3><p>Full payment is required before production begins.</p></div></article>
+      <article className="term-item" data-testid="text-production-timing"><span className="eyebrow">04 / Timing</span><div><h3>10–15 business days in production</h3><p>Standard production takes 10–15 business days after final proof approval, plus 24–48 hours transit.</p></div></article>
+      <article className="term-item" data-testid="text-courier-delivery"><span className="eyebrow">05 / Courier Guy</span><div><h3>R45 standard overnight</h3><p>Standard overnight flyer / local door-to-door delivery is R45.</p></div></article>
+      <article className="term-item" data-testid="text-free-delivery"><span className="eyebrow">06 / Larger orders</span><div><h3>Free delivery over R1,200</h3><p>Free delivery applies to orders over R1,200 via the Brands UP supplier policy.</p></div></article>
+      <article className="term-item" data-testid="text-pudo-delivery"><span className="eyebrow">07 / Locker delivery</span><div><h3>PUDO locker-to-locker · R60 flat</h3><p>Available on request. The price list notes a R25-per-order reduction for this option; we will confirm the final delivery total with your quote.</p></div></article>
+     </div>
+    </div>
+   </section>
+   <section className="print-contact">
+    <div className="wrap print-contact-inner"><div><div className="eyebrow" style={{marginBottom:14}}>Ready when you are</div><h2 className="display">Have a brief?<br/><i style={{color:'#C7994D'}}>Let’s talk.</i></h2><p>Send the item, quantity and any artwork you have. We’ll confirm your order details and final total.</p></div><a href={wa('Hello Sandulon, I would like a quote for a print or merchandise order.')} target="_blank" rel="noreferrer" className="solid-link" data-testid="link-print-whatsapp">Start on WhatsApp <ArrowUpRight size={15}/></a></div>
+   </section>
   <Callout/>
  </PageShell>;
 }
