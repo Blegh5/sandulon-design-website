@@ -67,25 +67,23 @@ function PageShell({children}: {children: ReactNode}) {
 function Home() {
   useEffect(()=>{document.title='Sandulon — Independent Design & Print Studio | Centurion'; const d=document.querySelector('meta[name="description"]')||document.createElement('meta');d.setAttribute('name','description');d.setAttribute('content','Sandulon is an independent design and print studio in Centurion, South Africa. UX, industrial design, motion, film, 3D and print.');document.head.appendChild(d);},[]);
   return <PageShell>
-    <section style={{minHeight:'min(900px,100svh)',position:'relative',display:'flex',alignItems:'center',paddingTop:90,overflow:'hidden'}}>
-      <div style={{position:'absolute',inset:'0 0 0 43%',opacity:.52}} className="hero-image"><img src={assets+'hypercar-render.png'} alt="Hypercar concept designed and rendered at Sandulon" style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center',maskImage:'linear-gradient(90deg,transparent 0%,black 42%)'}}/></div>
-      <div className="wrap" style={{position:'relative',zIndex:1}}>
+    <section className="home-hero">
+      <div className="wrap home-hero-content">
         <div className="eyebrow reveal" style={{marginBottom:26}}>Centurion, South Africa <span style={{color:'#697071',margin:'0 10px'}}>—</span> Independent design & print studio</div>
-        <h1 className="display hero-title reveal reveal-delay" style={{fontSize:'clamp(64px,9.7vw,142px)',lineHeight:.92,maxWidth:830,margin:'0 0 30px'}}>Designed and<br/>made, <i style={{color:'#C7994D',fontWeight:400}}>from brief</i><br/>to product.</h1>
+        <h1 className="display hero-title reveal reveal-delay" style={{lineHeight:.98,margin:'0 0 30px'}}>Designed and<br/>made, <i style={{color:'#C7994D',fontWeight:400}}>from brief</i><br/>to product.</h1>
         <p className="reveal" style={{fontSize:16,lineHeight:1.75,color:'rgba(234,221,187,.76)',maxWidth:475,margin:'0 0 34px'}}>Sandulon is the creative centre of Centurion — spanning UX, motion, industrial design, film, and print. Built for work that demands more than the ordinary.</p>
         <div className="reveal" style={{display:'flex',alignItems:'center',gap:27,flexWrap:'wrap'}}>
           <a href={wa('Hello Sandulon, I would like to start a project.')} target="_blank" rel="noreferrer" className="solid-link" data-testid="link-hero-start">Start a project <ArrowUpRight size={15}/></a>
           <a href="#work" className="outline-link" data-testid="link-hero-work">Explore selected work <ArrowDown size={14}/></a>
         </div>
-        <div className="mono" style={{position:'absolute',right:0,bottom:-150,color:'rgba(234,221,187,.42)',fontSize:9,writingMode:'vertical-rl'}}>Ancient name. Future studio.</div>
       </div>
-      <div style={{position:'absolute',bottom:0,left:0,right:0,borderTop:'1px solid rgba(234,221,187,.16)'}}>
-        <div className="wrap" style={{display:'flex',justifyContent:'space-between',padding:'18px 0',gap:20,flexWrap:'wrap'}}><span className="eyebrow">Design with a point of view</span><span style={{fontSize:11,color:'#697071'}}>UX · Industrial · Motion · Film · 3D · Print</span><span className="eyebrow">26° 11′ S / 28° 09′ E</span></div>
+      <div className="home-hero-meta">
+        <div className="wrap"><span className="eyebrow">Design with a point of view</span><span className="home-hero-disciplines">UX · Industrial · Motion · Film · 3D · Print</span><span className="eyebrow">26° 11′ S / 28° 09′ E</span></div>
       </div>
     </section>
     <section style={{padding:'130px 0 120px',background:'#EADDBB',color:'#130F0E'}}>
       <div className="wrap mobile-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10vw',alignItems:'center'}}>
-        <div className="image-frame" style={{height:490,position:'relative'}}><img src={assets+'tote-bag.png'} alt="Sandulon branded tote bag, custom print and merchandise" /><span className="mono" style={{position:'absolute',bottom:18,left:18,fontSize:9,color:'#EADDBB',background:'#130F0E',padding:'9px 12px'}}>Made in the studio · Centurion</span></div>
+        <div className="image-frame home-about-image" style={{height:490,position:'relative'}}><img src={assets+'tote-bag.png'} alt="Sandulon branded tote bag, custom print and merchandise" /><span className="mono" style={{position:'absolute',bottom:18,left:18,fontSize:9,color:'#EADDBB',background:'#130F0E',padding:'9px 12px'}}>Made in the studio · Centurion</span></div>
         <div>
           <div className="eyebrow" style={{color:'#A74926',marginBottom:22}}>About Sandulon</div>
           <h2 className="display" style={{fontSize:'clamp(42px,5.4vw,76px)',lineHeight:1.01,margin:'0 0 28px'}}>Ancient name.<br/>Future studio.</h2>
@@ -119,14 +117,14 @@ function Home() {
       <div className="wrap">
         <div className="eyebrow" style={{marginBottom:18}}>Selected work · 2025—26</div>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'end',marginBottom:48,gap:22,flexWrap:'wrap'}}><h2 className="display" style={{fontSize:'clamp(46px,7vw,86px)',lineHeight:.96,margin:0}}>From concept<br/>to finished piece.</h2><a href={wa('Hello Sandulon, I would like to see more selected work.')} target="_blank" rel="noreferrer" className="outline-link" data-testid="link-work-inquiry">More work available on request <ArrowUpRight size={14}/></a></div>
-        <div className="mobile-grid" style={{display:'grid',gridTemplateColumns:'1.15fr .85fr',gap:22}}>
+        <div className="home-work-feature-grid mobile-grid" style={{display:'grid',gridTemplateColumns:'1.15fr .85fr',gap:22}}>
           <Project img="deskpad-mockup.png" title="Solid Creations Group" meta="Custom deskpad · Print & merchandise · 2026" tall/>
           <div style={{display:'grid',gap:22}}>
             <Project img="corvette-poster.png" title="The Corvette Stingray" meta="Commercial · Graphic design · 2025"/>
             <Project img="godeza-ux.png" title="Godeza Jewellery" meta="UX design · Digital experience · 2025"/>
           </div>
         </div>
-        <div className="mobile-grid" style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:22,marginTop:22}}>
+        <div className="home-work-gallery-grid mobile-grid" style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:22,marginTop:22}}>
           <Project img="hypercar-render.png" title="Hypercar concept" meta="Industrial design · 3D · 2025"/>
           <Project img="easyeasel.png" title="EasyEasel" meta="Industrial design · Concept · 2025"/>
           <Project img="ecopen.png" title="EcoPen" meta="Industrial design · 3D · 2025"/>
@@ -169,8 +167,8 @@ function Design() {
      <div className="wrap" style={{position:'relative'}}>
        <Link href="/" className="outline-link" data-testid="link-design-back" style={{border:0,color:'#a59c8d',fontSize:11,marginBottom:60}}>← Back to home</Link>
        <div className="eyebrow" style={{marginBottom:20}}>01 / Design consultancy</div>
-       <h1 className="display" style={{fontSize:'clamp(68px,11vw,150px)',lineHeight:.88,maxWidth:1000,margin:'0 0 42px'}}>Where craft<br/>meets <i style={{color:'#C7994D'}}>intention.</i></h1>
-       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:40,maxWidth:960}}>
+        <h1 className="display design-title" style={{fontSize:'clamp(68px,11vw,150px)',lineHeight:.88,maxWidth:1000,margin:'0 0 42px'}}>Where craft<br/>meets <i style={{color:'#C7994D'}}>intention.</i></h1>
+        <div className="design-intro-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:40,maxWidth:960}}>
          <p style={{fontSize:16,lineHeight:1.8,color:'#c4b9a3',margin:0}}>We work across six disciplines — from the pixels on a screen to the body of a concept car. Every engagement starts with understanding what you actually need, and ends with something built to outlast the brief.</p>
          <div className="eyebrow" style={{alignSelf:'end',color:'#697071'}}>Centurion, South Africa <span style={{color:'#C7994D'}}>—</span> Ideas made tangible</div>
        </div>
@@ -179,7 +177,7 @@ function Design() {
    <section style={{padding:'70px 0 110px',background:'#EADDBB',color:'#130F0E'}}>
     <div className="wrap">
       <div className="eyebrow" style={{color:'#A74926',marginBottom:30}}>What we do / Six disciplines</div>
-      {disciplines.map(([n,title,tags,copy])=><article key={n} style={{display:'grid',gridTemplateColumns:'80px minmax(210px,.8fr) 1.2fr',gap:30,padding:'34px 0 38px',borderTop:'1px solid rgba(19,15,14,.2)'}}>
+      {disciplines.map(([n,title,tags,copy])=><article className="discipline-row" key={n} style={{display:'grid',gridTemplateColumns:'80px minmax(210px,.8fr) 1.2fr',gap:30,padding:'34px 0 38px',borderTop:'1px solid rgba(19,15,14,.2)'}}>
         <span className="mono" style={{fontSize:11,color:'#A74926',paddingTop:7}}>{n}</span>
         <div><h2 className="display" style={{fontSize:'clamp(28px,3.5vw,44px)',lineHeight:1.05,margin:'0 0 14px'}}>{title}</h2><span className="mono" style={{fontSize:9,color:'#766657',lineHeight:1.8}}>{tags}</span></div>
         <p style={{fontSize:14,lineHeight:1.85,color:'#51483e',margin:0,maxWidth:600}}>{copy}</p>
@@ -189,7 +187,7 @@ function Design() {
    <section style={{padding:'115px 0 95px'}}>
     <div className="wrap">
      <div className="eyebrow" style={{marginBottom:18}}>How we work</div><h2 className="display" style={{fontSize:'clamp(48px,7vw,84px)',margin:'0 0 52px'}}>Clear thinking.<br/><i style={{color:'#C7994D'}}>Good making.</i></h2>
-     <div className="mobile-grid" style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:0,borderTop:'1px solid rgba(234,221,187,.2)'}}>
+     <div className="mobile-grid process-grid" style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:0,borderTop:'1px solid rgba(234,221,187,.2)'}}>
       {[['01','Brief','We start by understanding the problem — not the solution you think you need. A short conversation or written brief is enough to get going.'],['02','Concept','We explore directions and present initial concepts. You choose what resonates. We kill what doesn’t. No attachment to the first idea.'],['03','Refinement','The chosen direction gets pushed further — detail, polish, and iteration until it’s exactly right. You stay in the loop throughout.'],['04','Delivery','Final files, ready to use. Print-ready, screen-ready, or production-ready — formatted correctly for wherever the work is going.']].map(([num,t,c])=><div key={num} style={{padding:'24px 22px 0 0',borderRight:'1px solid rgba(234,221,187,.18)',marginRight:22}}><span className="eyebrow">{num}</span><h3 className="display" style={{fontSize:26,margin:'19px 0 12px'}}>{t}</h3><p style={{fontSize:13,lineHeight:1.8,color:'#a59c8d'}}>{c}</p></div>)}
      </div>
     </div>
